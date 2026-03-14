@@ -1,3 +1,6 @@
+"""
+Making overlapping chunks of the data
+"""
 from typing import List
 
 def get_chunks(raw_text:str="") -> List:
