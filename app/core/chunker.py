@@ -18,18 +18,19 @@ def get_chunks(raw_text:str="") -> List:
     char_start = 0
     chunk_size = 500
     chunk_overlap = 50
-    char_end = char_start + chunk_size
     chunks:list = []
     chunk_idx = 0
-    while not (char_start > len(raw_text)):
+    while char_start < len(text):
+        char_end = min(char_start + chunk_size, len(text))
         chunks.append(
             {
                 "chunk_id" : chunk_idx,
-                "text" : raw_text[char_start : char_end],
+                "text" : text[char_start : char_end],
                 "char_start" : char_start
             }
         )
-        char_start = char_end - 50
-        char_end = min(char_start + chunk_size, len(raw_text))
+        if char_end == len(text):
+            break
+        char_start = char_end - chunk_overlap
         chunk_idx += 1
     return chunks
