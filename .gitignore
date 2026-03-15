@@ -3,6 +3,8 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.sh
+*.json
 
 # Environment
 .env
