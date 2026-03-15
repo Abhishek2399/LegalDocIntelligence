@@ -48,5 +48,67 @@ def store_chunk(embedded_chunks:list=None)->dict:
     return result
 
 
-def retrieve(query: str, n_results: int = 3) -> dict:
-    pass
+def retrieve(query: str = "", n_results: int = 3) -> dict:
+    """
+    Function which will restrieve chunks on the basis of the query passed to it
+
+    Args:
+        query (str, optional): Query passed for the document. Defaults to "".
+        n_results (int, optional): Top n results. Defaults to 3.
+
+    Returns:
+        dict: Status of the processing along with chunks and distances for the top n_results
+        structure : 
+        {
+            'chunks' : <chunks relevant to the query>,
+            'distances' : <distances of the relevant chunks>,
+            'embedding_status' : <status for query embedding>,
+            'query_status' : <status for data retrieval>,
+            'status' : <overall status>,
+            'error' : <error if any>  
+        }
+    """
+    result = {
+        'chunks' : [],
+        'distances' : [],
+        'embedding_status' : 0,
+        'query_status' : 0,
+        'status' : 0,
+        'error' : ''   
+    }
+    if not query:
+        result['error'] = 'No query passed'
+        return result
+    
+    # embedding the passed query
+    try:
+        embedded_query = genai.embed_content(
+            model="models/gemini-embedding-001",
+            content=query
+        ).get('embedding', [])
+        if embedded_query : 
+            result['embedding_status'] = 1
+    except Exception as e:
+        result['status'] = -1
+        result['embedding_status'] = -1
+        result['error'] = fr"{str(e)}-{traceback.format_exc()}"
+        return result
+
+    # retrieving the chunks relevant to the query
+    try:
+        probable_chunks = collection.query(
+            query_embeddings=[embedded_query],
+            n_results=n_results
+        )
+        result['query_status'] = 1
+    except Exception as e:
+        result['status'] = -1
+        result['query_status'] = -1
+        result['error'] = fr"{str(e)}-{traceback.format_exc()}"
+        return result
+
+    result['chunks'] = probable_chunks.get('documents')
+    result['distances'] = probable_chunks.get('distances')
+    result['status'] = 1
+
+    return result
