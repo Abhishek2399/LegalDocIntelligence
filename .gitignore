@@ -10,6 +10,7 @@ __pycache__/
 .env
 venv/
 env/
+test.py
 
 # Project specific
 uploads/
