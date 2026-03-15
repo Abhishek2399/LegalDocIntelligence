@@ -6,7 +6,7 @@ import chromadb
 import traceback
 from app.core.config import VECTOR_STORE_DIR
 
-CLIENT = chromadb.PersistentClient(path=VECTOR_STORE_DIR)
+CLIENT = chromadb.PersistentClient(path=str(VECTOR_STORE_DIR))
 COLLECTION = CLIENT.get_or_create_collection(name="bank_guarantees")
 
 
