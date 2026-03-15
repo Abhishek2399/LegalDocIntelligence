@@ -46,3 +46,7 @@ def store_chunk(embedded_chunks:list=None)->dict:
         return result
     
     return result
+
+
+def retrieve(query: str, n_results: int = 3) -> dict:
+    pass

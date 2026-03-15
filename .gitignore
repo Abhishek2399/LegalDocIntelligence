@@ -5,7 +5,7 @@ __pycache__/
 *.pyd
 *.sh
 *.json
-
+*.ipynb
 # Environment
 .env
 venv/
